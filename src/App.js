@@ -47,24 +47,59 @@ function HN_Title_Row({ article, index }) {
 
 function App() {
   const [articles, setArticles] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   function fetchData() {
-    fetch(`https://newsapi.org/v2/everything?q=&apiKey=${APIKEY}`)
+    fetch(`https://newsapi.org/v2/everything?q=${searchText}&apiKey=${APIKEY}`)
       .then((response) => response.json())
       .then((data) => setArticles(data.articles));
   }
 
+  /*
   useEffect(() => {
     fetchData();
   }, []);
+  */
+  const inputStyle = {
+    padding: "12px 20px",
+    width: "100%",
+    marginRight: "10px",
+    boxSizing: "border-box",
+  };
+
+  const submitBtnStyle = {
+    padding: "12px 20px",
+    background: "#0066A2",
+    color: "white",
+    borderStyle: "outset",
+    borderColor: "#0066A2",
+    borderRadius: "5px",
+    textShadow: "none",
+  };
 
   return (
     <div className="app">
+      <div style={{display: 'flex', width: '50%'}}>
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => setSearchText(e.target.value)}
+          style={inputStyle}
+        />
+        <button onClick={fetchData} style={submitBtnStyle}>
+          Submit
+        </button>
+        <br />
+      </div>
       <table>
         <tbody>
-          {articles ? articles.map((article, index) => (
-            <HN_Title_Row article={article} index={index} />
-          )) : <p>Empty</p>}
+          {articles ? (
+            articles.map((article, index) => (
+              <HN_Title_Row article={article} index={index} />
+            ))
+          ) : (
+            <p>Empty</p>
+          )}
         </tbody>
       </table>
     </div>
